@@ -1,5 +1,5 @@
 import express, { Application, Request, Response } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { Error } from 'mongoose';
 import cors from 'cors';
 
 import RequestLog from './middleware/request.log';
@@ -11,11 +11,13 @@ const app: Application = express();
 const mongo = mongoose;
 
 // start main components
-app.listen(5000, (): void => console.log('> Aplication started'));
 mongo.connect(
-    `mongodb+srv://${process.env.USERNAME}:${process.env.PASSWORD}@companyofheroes-pdqfb.mongodb.net/CofH?retryWrites=true&w=majority`,
+    `mongodb+srv://${process.env.user}:${process.env.pass}@${process.env.cluster}-pdqfb.mongodb.net/${process.env.database}?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true },
-    (): void => console.log('> Connected to database\n')
+    (error: Error): void => {
+        if (error) console.error(error.message);
+        else console.log('> Connected to database\n');
+    }
 );
 
 // Base middleWare
